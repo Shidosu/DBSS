@@ -11,5 +11,11 @@ def prediction():
     q = float(request.form.get("q"))
     return(render_template("prediction.html", r=(-50.6*q)+90.2))
 
+    #load model
+    model = joblib.load('dbs.jl')
+    
+    #predict model
+    p = model.predict([[1.35]])
+
 if __name__ == "__main__":
     app.run()
