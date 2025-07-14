@@ -13,14 +13,11 @@ def main():
 
     # Insert database here
 
-    return(render_template("main.html", r=p))
+    return(render_template("main.html",))
 
 @app.route("/dbs",methods=["GET","POST"])
 def dbs():
     return(render_template("dbs.html"))
-
-if __name__ == "__main__":
-    app.run()
 
 @app.route("/prediction",methods=["GET","POST"])
 def prediction():
