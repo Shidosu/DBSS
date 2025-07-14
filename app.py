@@ -1,5 +1,14 @@
-from flask import Flask,render_template,request
+from flask import Flask, render_template, request
 import joblib
+from groq import Groq
+
+import os
+
+api_key = os.environ.get('GROK')
+if api_key == None:
+    api_key = # actual key here
+
+os.environ['GROQ_API_KEY'] = api_key
 
 app = Flask(__name__)
 
@@ -10,10 +19,28 @@ def index():
 @app.route("/main",methods=["GET","POST"])
 def main():
     q = request.form.get("q")
+    # db
+    return(render_template("main.html"))
 
-    # Insert database here
+@app.route("/llama",methods=["GET","POST"])
+def llama():
+    return(render_template("llama.html"))
 
-    return(render_template("main.html",))
+@app.route("/llama_reply",methods=["GET","POST"])
+def llama_reply():
+    q = request.form.get("q")
+    # load model
+    client = Groq()
+    completion = client.chat.completions.create(
+        model="llama-3.1-8b-instant",
+        messages=[
+            {
+                "role": "user",
+                "content": q
+            }
+        ]
+    )
+    return(render_template("llama_reply.html",r=completion.choices[0].message.content))
 
 @app.route("/dbs",methods=["GET","POST"])
 def dbs():
@@ -22,9 +49,9 @@ def dbs():
 @app.route("/prediction",methods=["GET","POST"])
 def prediction():
     q = float(request.form.get("q"))
-    #load model
+    # load model
     model = joblib.load("dbs.jl")
-    #make prediction
+    # make prediction
     pred = model.predict([[q]])
     return(render_template("prediction.html",r=pred))
 
