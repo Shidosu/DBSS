@@ -15,7 +15,7 @@ def prediction():
     model = joblib.load('dbs.jl')
     
     #predict model
-    p = model.predict([[1.35]])
+    p = model.predict([[q]])
 
 if __name__ == "__main__":
     app.run()
